@@ -2,73 +2,43 @@ import java.text.NumberFormat;
 import java.util.Scanner;
 
 public class MortgageCalculator {
-        private static final byte PERCENT = 100;
-        private static final byte MONTHS_IN_YEAR = 12;
-        private static Scanner scanner = new Scanner(System.in);
 
+    private static Scanner scanner = new Scanner(System.in);
 
-    // public static long principal() {
-    //      // principal
-    //     System.out.println("Principal: ");
-    //     return scanner.nextLong();
-    // }
-    public static long principal() {
-        System.out.println("Principal (default 100,000): ");
-        String input = scanner.nextLine();
+    public static double calculator(int principal, float annualInterest, byte years) {
 
-        // Check if the user input is empty
-        if (input.isEmpty()) {
-            return 100000; // Default value
-        }
+        final byte MONTHS_IN_YEAR = 12;
+        final byte PERCENT = 100;
+        float numberOfPayments = years * MONTHS_IN_YEAR;
+        float monthlyInterest = annualInterest / PERCENT / MONTHS_IN_YEAR;
 
-    // Parse and return the user input if provided
-    return Long.parseLong(input);
-}
-
-    public static float interest() {
-        System.out.println("Annual Interest Rate (default 5.0%): ");
-        String input = scanner.nextLine();
-
-        if (input.isEmpty()) {
-            return 5.0f / PERCENT / MONTHS_IN_YEAR; // Default rate: 5%
-        }
-
-        float annualRate = Float.parseFloat(input);
-        return annualRate / PERCENT / MONTHS_IN_YEAR;
+        return principal * (monthlyInterest * Math.pow(1 + monthlyInterest, numberOfPayments)
+                / (Math.pow(1 + monthlyInterest, numberOfPayments) - 1));
     }
 
-
-    public static int period() {
-        System.out.println("Period (years, default 30): ");
-        String input = scanner.nextLine();
-
-        if (input.isEmpty()) {
-            return 30 * MONTHS_IN_YEAR; // Default period: 30 years
+    public static double getValue(String message, double min, double max, Scanner scanner) {
+        double value;
+        while (true) {
+            System.out.print(message);
+            value = scanner.nextFloat();
+            if (value >= min && value <= max)
+                break;
+            System.out.println("Please use a value between " + min + " and " + max);
         }
-
-        int years = Integer.parseInt(input);
-        return years * MONTHS_IN_YEAR;
+        return value;
     }
-
-
-    public static float calculator(long principal, double period, double rate) {
-    // Calculate the monthly payment (m) using the formula
-    float m = (float) (principal * (rate * Math.pow(1 + rate, period)) / (Math.pow(1 + rate, period) - 1));
-
-    return m;
-}
 
     public static void main(String[] args) {
-        long principal = principal();
-        double period = period();
-        double rate = interest();
-        float mortgage = calculator(principal, period, rate);
+        int principal = (int) getValue("Principal (€1k - €1M): ", 1000, 1_000_000, scanner);
+        float annualInterest = (float) getValue("Annual Interest Rate: ", 1.0, 3.0, scanner);
+        byte years = (byte) getValue("Years: ", 1, 30, scanner);
+
+        double mortgage = calculator(principal, annualInterest, years);
 
         String payment = NumberFormat.getCurrencyInstance().format(mortgage);
-       
-        System.out.println("your mortgage: " + payment);
+
+        System.out.println("Monthly Payments: " + payment + "\n");
+
         scanner.close();
-
-
-   } 
+    }
 }
