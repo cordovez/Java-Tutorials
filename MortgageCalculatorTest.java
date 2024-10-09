@@ -8,7 +8,7 @@ public class MortgageCalculatorTest {
     public void testPrincipalDefault() {
         // Assuming no input from user, the default value should be 100000
         long expectedPrincipal = 100000; // Default value
-        long actualPrincipal = MortgageCalculator.principal(); // Simulate no user input
+        long actualPrincipal = mortgageCalculator.principal(); // Simulate no user input
         assertEquals(expectedPrincipal, actualPrincipal);
     }
 
@@ -30,7 +30,7 @@ public class MortgageCalculatorTest {
     public void testInterestDefault() {
         // Default interest rate should be 5.0% which is converted to monthly
         float expectedRate = 5.0f / 100 / 12;
-        float actualRate = MortgageCalculator.interest();
+        float actualRate = mortgageCalculator.interest();
         assertEquals(expectedRate, actualRate, 0.0001);
     }
 
@@ -39,7 +39,7 @@ public class MortgageCalculatorTest {
     public void testPeriodDefault() {
         // Default period is 30 years, converted to months (30 * 12)
         int expectedPeriod = 30 * 12;
-        int actualPeriod = MortgageCalculator.period();
+        int actualPeriod = mortgageCalculator.period();
         assertEquals(expectedPeriod, actualPeriod);
     }
 
@@ -51,7 +51,7 @@ public class MortgageCalculatorTest {
         double rate = 0.005; // 6% annual rate
 
         float expectedMortgage = 599.55f; // Example expected monthly mortgage payment
-        float actualMortgage = MortgageCalculator.calculator(principal, period, rate);
+        float actualMortgage = mortgageCalculator.calculator(principal, period, rate);
         assertEquals(expectedMortgage, actualMortgage, 0.01);
     }
 }
